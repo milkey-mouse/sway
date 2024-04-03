@@ -19,7 +19,8 @@ static const char *bg_options[] = {
 };
 
 static bool validate_color(const char *color) {
-	if (strlen(color) != 7 || color[0] != '#') {
+	size_t len = strlen(color);
+	if ((len != 4 && len != 7) || color[0] != '#') {
 		return false;
 	}
 
@@ -46,7 +47,7 @@ struct cmd_results *output_cmd_background(int argc, char **argv) {
 	if (strcasecmp(argv[1], "solid_color") == 0) {
 		if (!validate_color(argv[0])) {
 			return cmd_results_new(CMD_INVALID,
-					"Colors should be of the form #RRGGBB");
+					"Colors should be of the form #RRGGBB or #RGB");
 		}
 		output->background = strdup(argv[0]);
 		output->background_option = strdup("solid_color");
@@ -136,7 +137,7 @@ struct cmd_results *output_cmd_background(int argc, char **argv) {
 		if (argc && *argv[0] == '#') {
 			if (!validate_color(argv[0])) {
 				return cmd_results_new(CMD_INVALID,
-						"fallback color should be of the form #RRGGBB");
+						"fallback color should be of the form #RRGGBB or #RGB");
 			}
 
 			output->background_fallback = strdup(argv[0]);
